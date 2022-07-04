@@ -1,0 +1,68 @@
+type: object
+properties:
+  chargedWeight:
+    type: string
+    default: ''
+    nullable: true
+  distance:
+    type: string
+    default: ''
+    nullable: true
+  minimumHours:
+    type: string
+    default: ''
+    nullable: true
+  hourlyRateExFuel:
+    type: string
+    default: ''
+    nullable: true
+  cubingFactor:
+    type: string
+    default: ''
+    nullable: true
+  freightChargeExGst:
+    type: string
+    default: ''
+    nullable: true
+  fuelAmount:
+    type: string
+    default: ''
+    nullable: true
+  fuelPercentage:
+    type: string
+    default: ''
+    nullable: true
+  rateType:
+    type: string
+    default: ''
+    nullable: true
+  serviceCode:
+    type: string
+    default: ''
+    nullable: true
+  serviceDescription:
+    type: string
+    default: ''
+    nullable: true
+  totalChargeExGst:
+    type: string
+    default: ''
+    nullable: true
+  totalPayableIncGst:
+    type: string
+    default: ''
+    nullable: true
+  zoneFrom:
+    type: string
+    default: ''
+    nullable: true
+  zoneTo:
+    type: string
+    default: ''
+    nullable: true
+  additionalChargesList:
+    type: array
+    items:
+      $ref: .\Authorization.SharedKernel.Models.Additionalchargeslist.yaml
+    nullable: true
+additionalProperties: false

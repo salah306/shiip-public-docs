@@ -1,0 +1,32 @@
+type: object
+properties:
+  access_token:
+    type: string
+    nullable: true
+  token_type:
+    type: string
+    nullable: true
+  expires_in:
+    type: number
+    format: double
+  refresh_token:
+    type: string
+    nullable: true
+  userName:
+    type: string
+    nullable: true
+  .issued:
+    type: string
+    format: date-time
+  .expires:
+    type: string
+    format: date-time
+  tenants:
+    type: array
+    items:
+      type: string
+    nullable: true
+  sb:
+    type: string
+    nullable: true
+additionalProperties: false

@@ -1,0 +1,8 @@
+enum:
+  - Pdf
+  - Excel
+  - Word
+  - Image
+  - PureImage
+  - Html
+type: string

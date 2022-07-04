@@ -1,0 +1,15 @@
+required:
+  - email
+  - password
+  - wmsCode
+type: object
+properties:
+  email:
+    type: string
+    format: email
+  password:
+    type: string
+    format: password
+  wmsCode:
+    type: string
+additionalProperties: false

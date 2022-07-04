@@ -1,0 +1,27 @@
+required:
+  - address1
+  - postCode
+  - state
+  - suburb
+type: object
+properties:
+  address1:
+    maxLength: 200
+    minLength: 2
+    type: string
+  address2:
+    type: string
+    nullable: true
+  postCode:
+    maxLength: 4
+    minLength: 4
+    type: string
+  state:
+    maxLength: 200
+    minLength: 2
+    type: string
+  suburb:
+    maxLength: 200
+    minLength: 2
+    type: string
+additionalProperties: false

@@ -1,0 +1,12 @@
+get:
+  tags:
+    - Global
+  parameters:
+    - name: connoteNo
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success

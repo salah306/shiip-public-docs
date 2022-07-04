@@ -1,0 +1,6 @@
+get:
+  tags:
+    - EstimateTest
+  responses:
+    '200':
+      description: Success

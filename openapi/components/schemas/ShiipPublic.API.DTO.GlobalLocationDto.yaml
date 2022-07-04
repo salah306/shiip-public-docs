@@ -1,0 +1,59 @@
+required:
+  - businessName
+  - locationName
+  - senderCode
+type: object
+properties:
+  locationName:
+    maxLength: 200
+    minLength: 2
+    type: string
+  disabled:
+    type: boolean
+  senderCode:
+    maxLength: 200
+    minLength: 2
+    type: string
+  businessName:
+    maxLength: 200
+    minLength: 2
+    type: string
+  locationAddress:
+    $ref: .\ShiipPublic.API.DTO.LocationAddressDto.yaml
+  locationContact:
+    $ref: .\ShiipPublic.API.DTO.LocationContactDto.yaml
+  locationSupport:
+    $ref: .\ShiipPublic.API.DTO.LocationSupportDto.yaml
+  businessOpenTime:
+    type: string
+    nullable: true
+  businessCloseTime:
+    type: string
+    nullable: true
+  locationUsers:
+    type: array
+    items:
+      type: string
+    nullable: true
+  ianaTimeZone:
+    type: string
+    nullable: true
+  specialInstructions:
+    type: string
+    nullable: true
+  autoSelectBestCarrier:
+    type: boolean
+  autoSelectCriteria:
+    type: string
+    nullable: true
+  carrierServices:
+    type: array
+    items:
+      $ref: .\ShiipPublic.API.DTO.GlobalJourneyDto.yaml
+    nullable: true
+  additionalData:
+    type: array
+    items:
+      $ref: .\ShiipPublic.API.DTO.LocationAdditionalDataDto.yaml
+    nullable: true
+additionalProperties: false

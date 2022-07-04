@@ -1,0 +1,18 @@
+type: object
+properties:
+  status:
+    type: string
+    nullable: true
+  dateTime:
+    type: string
+    format: date-time
+  details:
+    type: string
+    nullable: true
+  location:
+    type: string
+    nullable: true
+  orderId:
+    type: integer
+    format: int32
+additionalProperties: false

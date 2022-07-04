@@ -1,0 +1,30 @@
+type: object
+properties:
+  className:
+    type: number
+    format: double
+  packageType:
+    type: string
+    nullable: true
+  packingGroup:
+    type: string
+    nullable: true
+  noPkgs:
+    type: integer
+    format: int32
+  aggregateQty:
+    type: integer
+    format: int32
+  unn:
+    type: string
+    nullable: true
+  contactName:
+    type: string
+    nullable: true
+  contactPhone:
+    type: string
+    nullable: true
+  shippingName:
+    type: string
+    nullable: true
+additionalProperties: false

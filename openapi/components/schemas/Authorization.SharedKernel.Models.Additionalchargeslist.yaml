@@ -1,0 +1,15 @@
+type: object
+properties:
+  additionalChargeExGst:
+    type: string
+    default: ''
+    nullable: true
+  additionalChargeForInvoiceDescription:
+    type: string
+    default: ''
+    nullable: true
+  additionalChargeIncGst:
+    type: string
+    default: ''
+    nullable: true
+additionalProperties: false

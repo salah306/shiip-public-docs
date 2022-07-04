@@ -1,0 +1,12 @@
+get:
+  tags:
+    - EstimateTest
+  parameters:
+    - name: tenantCode
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Success

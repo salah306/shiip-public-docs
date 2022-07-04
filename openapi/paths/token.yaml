@@ -1,0 +1,33 @@
+post:
+  tags:
+    - Authentication Token endpoint
+  requestBody:
+    content:
+      application/json-patch+json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.Login.yaml
+      application/json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.Login.yaml
+      text/json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.Login.yaml
+      application/*+json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.Login.yaml
+      application/xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.Login.yaml
+      text/xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.Login.yaml
+      application/*+xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.Login.yaml
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\ShiipPublic.API.DTO.Token.yaml

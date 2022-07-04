@@ -1,0 +1,42 @@
+post:
+  description: 'The service is secured via 0Auth 2.0 authentication using JSON Web Tokens (JWT). A connecting client must authenticate with a valid and active Cubiic login/password combination and WMS Code to request an access token, which is then used to authenticate with the CC web service.' 
+  summary: 'Authentication Token endpoint'
+  tags:
+    - Authentication
+  requestBody:
+    content:
+      application/json-patch+json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.TenantLogin.yaml
+      application/json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.TenantLogin.yaml
+      text/json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.TenantLogin.yaml
+      application/*+json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.TenantLogin.yaml
+      application/xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.TenantLogin.yaml
+      text/xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.TenantLogin.yaml
+      application/*+xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.TenantLogin.yaml
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ..\components\schemas\ShiipPublic.API.DTO.Token.yaml
+    '400':
+      description: Bad Request
+  x-code-samples: 
+    -  lang: 'C#'
+    -  source: |
+    
+      

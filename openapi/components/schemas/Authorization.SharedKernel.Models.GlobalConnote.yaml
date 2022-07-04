@@ -1,0 +1,245 @@
+required:
+  - receiverAddress
+  - warehouseCode
+type: object
+properties:
+  id:
+    type: string
+    default: ''
+    nullable: true
+  consignmentNo:
+    type: string
+    default: ''
+    nullable: true
+  carrierName:
+    type: string
+    default: ''
+    nullable: true
+  serviceName:
+    type: string
+    default: ''
+    nullable: true
+  serviceCode:
+    type: string
+    default: ''
+    nullable: true
+  carrierCode:
+    type: string
+    default: ''
+    nullable: true
+  carrierType:
+    type: string
+    default: ''
+    nullable: true
+  estimatedPrice:
+    type: string
+    default: ''
+    nullable: true
+  estimatedPriceExGst:
+    type: string
+    default: ''
+    nullable: true
+  eta:
+    type: string
+    default: ''
+    nullable: true
+  minEta:
+    type: string
+    default: ''
+    nullable: true
+  cutOffDateTime:
+    type: string
+    default: ''
+    nullable: true
+  accountNo:
+    type: string
+    default: ''
+    nullable: true
+  readyDateTime:
+    type: string
+    format: date-time
+  tenantCode:
+    type: string
+    default: ''
+    nullable: true
+  transitTime:
+    type: number
+    format: float
+    default: 5
+  costEstimate:
+    $ref: .\Authorization.SharedKernel.Models.CostEstimate.yaml
+  customerCode:
+    type: string
+    default: ''
+    nullable: true
+  warehouseCode:
+    type: string
+    default: ''
+  senderAddress:
+    $ref: .\Authorization.SharedKernel.Models.GlobalAddress.yaml
+  reference:
+    type: string
+    default: ''
+    nullable: true
+  senderReferences:
+    type: array
+    items:
+      type: string
+    nullable: true
+  receiverReferences:
+    type: array
+    items:
+      type: string
+    nullable: true
+  receiverAddress:
+    $ref: .\Authorization.SharedKernel.Models.GlobalAddress.yaml
+  connoteGoods:
+    type: array
+    items:
+      $ref: .\Authorization.SharedKernel.Models.GlobalConnoteGood.yaml
+    nullable: true
+  additionalCharges:
+    type: array
+    items:
+      type: string
+    nullable: true
+  specialInstructions:
+    type: string
+    default: ''
+    nullable: true
+  isATL:
+    type: boolean
+    default: false
+  isResidential:
+    type: boolean
+    default: false
+  emailTracking:
+    type: array
+    items:
+      type: string
+    nullable: true
+  saveAsDraft:
+    type: boolean
+    default: false
+  createDrafts:
+    type: boolean
+    default: false
+  reassignedFrom:
+    type: string
+    default: ''
+    nullable: true
+  reason:
+    type: string
+    nullable: true
+  events:
+    type: array
+    items:
+      $ref: .\Authorization.SharedKernel.Models.GlobalConnote+GlobalCEvents.yaml
+    nullable: true
+  customerId:
+    type: integer
+    format: int32
+    default: 0
+  billingId:
+    type: string
+    default: ''
+    nullable: true
+  isReturn:
+    type: boolean
+    default: false
+  thirdParty:
+    type: string
+    default: ''
+    nullable: true
+  emailLabel:
+    type: string
+    default: ''
+    nullable: true
+  toSendLabel:
+    type: boolean
+    default: false
+  labelPrinter:
+    type: string
+    nullable: true
+  sendSMS:
+    type: boolean
+    default: false
+  logId:
+    type: string
+    nullable: true
+  bookNow:
+    type: boolean
+    default: false
+  autoManifest:
+    type: boolean
+    default: false
+  autoManifestDateTime:
+    type: string
+    format: date-time
+  idCheck:
+    type: string
+    nullable: true
+  signatureRequired:
+    type: boolean
+  poa:
+    type: boolean
+  reassignedTo:
+    type: string
+    default: ''
+    nullable: true
+  reassignedToCarrier:
+    type: string
+    default: ''
+    nullable: true
+  reassignedToService:
+    type: string
+    default: ''
+    nullable: true
+  reassignedFromCarrier:
+    type: string
+    default: ''
+    nullable: true
+  reassignedFromService:
+    type: string
+    default: ''
+    nullable: true
+  reassignedReason:
+    type: string
+    default: ''
+    nullable: true
+  originatingCarrierCode:
+    type: string
+    nullable: true
+  originatingServiceCode:
+    type: string
+    nullable: true
+  sortBy:
+    type: string
+    nullable: true
+  limitTo:
+    type: integer
+    format: int32
+  serviceGroup:
+    type: string
+    nullable: true
+  costCentre:
+    type: string
+    default: ''
+    nullable: true
+  createdDate:
+    type: string
+    format: date-time
+    nullable: true
+  orderNo:
+    type: string
+    default: ''
+    nullable: true
+  fulfillmentRequestId:
+    type: string
+    default: ''
+    nullable: true
+  storeId:
+    type: string
+    default: ''
+    nullable: true
+additionalProperties: false

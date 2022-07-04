@@ -1,0 +1,41 @@
+post:
+  description: |
+    This service allows clients to request a list of available carriers, services and price details for a given sender, receiver and goods combination. 
+    The service returns an array of Carrier/Service objects uniquely identified by a temporary corresponding ‘consignmentNo’ field. 
+    The consignmentNo from the returned object can then be used in a CreateConsignment request to convert the selected estimate into an ‘Incomplete' or ‘Ready’ consignment in Cubiic.
+  summary: 'Get Estimates endpoint'
+  tags:
+    - Estimate
+  requestBody:
+    content:
+      application/json-patch+json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      text/json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/*+json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      text/xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/*+xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+  responses:
+    '200':
+      description: Success

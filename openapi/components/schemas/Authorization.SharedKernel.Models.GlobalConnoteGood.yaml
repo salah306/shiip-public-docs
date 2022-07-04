@@ -1,0 +1,48 @@
+type: object
+properties:
+  itemReference:
+    type: string
+    default: ''
+    nullable: true
+  qty:
+    maximum: 999
+    minimum: 0
+    type: integer
+    format: int32
+    default: 0
+  length:
+    maximum: 999
+    minimum: 0
+    type: number
+    format: double
+    default: 0
+  width:
+    maximum: 999
+    minimum: 0
+    type: number
+    format: double
+    default: 0
+  height:
+    maximum: 999
+    minimum: 0
+    type: number
+    format: double
+    default: 0
+  weight:
+    maximum: 99999
+    minimum: 0
+    type: number
+    format: double
+    default: 0
+  unitOfMeasureName:
+    maxLength: 20
+    minLength: 3
+    type: string
+    default: ''
+    nullable: true
+  dangerousGoods:
+    $ref: .\Authorization.SharedKernel.Models.GlobalDG.yaml
+  volume:
+    type: number
+    format: double
+additionalProperties: false

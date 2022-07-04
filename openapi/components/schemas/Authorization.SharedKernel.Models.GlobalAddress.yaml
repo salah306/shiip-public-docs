@@ -1,0 +1,53 @@
+required:
+  - address1
+  - companyName
+  - postCode
+  - state
+  - suburb
+type: object
+properties:
+  companyName:
+    type: string
+    default: ''
+  address1:
+    maxLength: 70
+    minLength: 3
+    type: string
+    default: ''
+  address2:
+    maxLength: 70
+    minLength: 0
+    type: string
+    nullable: true
+  suburb:
+    maxLength: 53
+    minLength: 2
+    type: string
+    default: ''
+  state:
+    maxLength: 10
+    minLength: 1
+    type: string
+    default: ''
+  postCode:
+    maxLength: 4
+    minLength: 4
+    type: string
+  contact:
+    type: string
+    default: ''
+    nullable: true
+  phone:
+    type: string
+    format: tel
+    default: ''
+    nullable: true
+  email:
+    type: string
+    default: ''
+    nullable: true
+  country:
+    type: string
+    default: ''
+    nullable: true
+additionalProperties: false

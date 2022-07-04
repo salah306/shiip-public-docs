@@ -1,0 +1,72 @@
+post:
+  summary: Create Consignment endpoint
+  description: |
+    This endpoint accepts a single consignment object and returns either a success message or list of errors.
+     - By default the Create Consignment endpoint will create a Draft consignment which a user can then
+     then access in Cubiic to fill in any additional or missing details and then selecting a service and save the
+     completed connote.
+
+     - Alternatively a location can be set to create consignments in a Ready state using a default service. If
+     there are no issues with the supplied data the consignment will be created in a Ready state and will be
+     available to print and manifest without the user having to select the carrier service themselves.
+     - For a more complete integration you can also use the [Get Estimates endpoint](#tag/Estimate/paths/~1Estimate~1GetEstimates/post) to display or process the
+     estimates on your system and then a corresponding Create Consignment call to select one of available
+     estimates.
+     - Not all of the goods details are required for a consignment to be created in an Incomplete state, but
+     the consignment does need to be complete in order to be despatched.
+       - for example to create a complete consignment which is ready to be despatched:
+         - supply the complete consignment details using the API so that the consignment is ready straight away
+         - supply goods line(s) with the Quantity and an ItemReference that matches an item in your product list - allowing Cubiic to fill in the dimensions and make the consignment ready
+        
+       - or to create an incomplete consignment that a user will fill in on the front end:
+         - supply goods line(s) with the Weight but without dimensions because you might know how heavy the items are but don't know in advance how your warehouse will pack them
+         - don't supply dimensions and require a user to fill in all the goods details
+
+  tags:
+    - Consignment
+  requestBody:
+    content:
+      application/json-patch+json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      text/json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/*+json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      text/xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/*+xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+
+  responses:
+    "200":
+      description: Success
+    "400":
+      description: "Bad Request"
+      content:
+        application/json:
+          example: '{
+            "errors": {
+            "ReceiverAddress.State": [
+            "The State field is required."
+            ]
+            },
+            "title": "One or more validation errors occurred.",
+            "status": 400,'

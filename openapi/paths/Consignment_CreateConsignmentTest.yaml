@@ -1,0 +1,36 @@
+post:
+  tags:
+    - Consignment
+  requestBody:
+    content:
+      application/json-patch+json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      text/json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/*+json:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      text/xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+      application/*+xml:
+        schema:
+          $ref: >-
+            ..\components\schemas\Authorization.SharedKernel.Models.GlobalConnote.yaml
+  responses:
+    '200':
+      description: Success

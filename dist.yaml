@@ -1,0 +1,1029 @@
+openapi: 3.0.1
+info:
+  x-logo:
+    url: https://shiipdemo.azurewebsites.net/ce5464ed455495b51ba7330371f5a7dd.png
+    altText: Shiip logo
+  title: Shiip Customer
+  version: v1
+  description: |
+    # Introduction
+
+      The purpose of this document is to outline the guidelines and specifications required to Create Consignments in the Cubiic system via Integration services. 
+      
+      There are two methods presented in this spec with which a client can integrate with Cubiic, a REST based web service, and a CSV upload service.
+      ## 1.1. Revision history
+       - 2021-02-15
+        - Added explicit examples of UOMs
+        - Fixed some various typos
+     - 2021-02-02
+         - CreateConsignment payload updated with additional properties
+     - 2021-01-14
+        - GetEstimates endpoint path updated
+     - 2020-12-30
+         - Fixed a broken link
+     - 2020-11-24
+         - Deprecate old CSV format, added new CSV spec
+     - 2020-10-10
+         - Added connote tracking endpoint
+     - 2020-10-09
+         - Added Webhook tracking event service
+     - 2020-10-08
+         - Added carrierCode and serviceCode parameters to CreateConsignment spec
+     - 2020-09-07
+         - Deprecated Reference parameter
+     - 2020-08-11
+         - Added ReceiverReferences and SenderReferences parameters
+         - Added GetEstimates spec and corresponding consignmentNo parameter to CreateConsignment
+        when using an estimate
+     - 2020-03-02
+         - Added CSV upload service
+     - 2019-07-04
+         - Initial public API spec
+     # Cubiic API web service
+     ## 2.1. Overview
+      - The Cubiic API web service is a RESTful web service that allows an authenticated client to submit consignment data, which is then accessible as either an "Incomplete"/ Draft or "Ready" consignment in Cubiic.
+     ## 2.1.1. Features
+      - Accepts a single consignment object per request and creates a draft consignment in Cubiic
+      - Creates the consignment in the appropriate Cubiic tenancy based on authentication token
+      - Can assign a default carrier to the consignment based on Location preferences in Cubiic
+servers:
+  - url: https://shiippublicdemo.azurewebsites.net
+paths:
+  /TokenByWmsCode:
+    post:
+      description: >-
+        The service is secured via 0Auth 2.0 authentication using JSON Web
+        Tokens (JWT). A connecting client must authenticate with a valid and
+        active Cubiic login/password combination and WMS Code to request an
+        access token, which is then used to authenticate with the CC web
+        service.
+      summary: Authentication Token endpoint
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.TenantLogin'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.TenantLogin'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.TenantLogin'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.TenantLogin'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.TenantLogin'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.TenantLogin'
+          application/*+xml:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.TenantLogin'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiipPublic.API.DTO.Token'
+        '400':
+          description: Bad Request
+      x-code-samples:
+        - lang: C#
+        - source: ''
+  /Consignment/CreateConsignment:
+    post:
+      summary: Create Consignment endpoint
+      description: >
+        This endpoint accepts a single consignment object and returns either a
+        success message or list of errors.
+         - By default the Create Consignment endpoint will create a Draft consignment which a user can then
+         then access in Cubiic to fill in any additional or missing details and then selecting a service and save the
+         completed connote.
+
+         - Alternatively a location can be set to create consignments in a Ready state using a default service. If
+         there are no issues with the supplied data the consignment will be created in a Ready state and will be
+         available to print and manifest without the user having to select the carrier service themselves.
+         - For a more complete integration you can also use the [Get Estimates endpoint](#tag/Estimate/paths/~1Estimate~1GetEstimates/post) to display or process the
+         estimates on your system and then a corresponding Create Consignment call to select one of available
+         estimates.
+         - Not all of the goods details are required for a consignment to be created in an Incomplete state, but
+         the consignment does need to be complete in order to be despatched.
+           - for example to create a complete consignment which is ready to be despatched:
+             - supply the complete consignment details using the API so that the consignment is ready straight away
+             - supply goods line(s) with the Quantity and an ItemReference that matches an item in your product list - allowing Cubiic to fill in the dimensions and make the consignment ready
+            
+           - or to create an incomplete consignment that a user will fill in on the front end:
+             - supply goods line(s) with the Weight but without dimensions because you might know how heavy the items are but don't know in advance how your warehouse will pack them
+             - don't supply dimensions and require a user to fill in all the goods details
+      tags:
+        - Consignment
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/xml:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          text/xml:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/*+xml:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example: >-
+                { "errors": { "ReceiverAddress.State": [ "The State field is
+                required." ] }, "title": "One or more validation errors
+                occurred.", "status": 400,
+  /Consignment/ManifestByNo/{manifestNo}:
+    put:
+      tags:
+        - Consignment
+      parameters:
+        - name: manifestNo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /Estimate/GetEstimates:
+    post:
+      description: >
+        This service allows clients to request a list of available carriers,
+        services and price details for a given sender, receiver and goods
+        combination. 
+
+        The service returns an array of Carrier/Service objects uniquely
+        identified by a temporary corresponding ‘consignmentNo’ field. 
+
+        The consignmentNo from the returned object can then be used in a
+        CreateConsignment request to convert the selected estimate into an
+        ‘Incomplete' or ‘Ready’ consignment in Cubiic.
+      summary: Get Estimates endpoint
+      tags:
+        - Estimate
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/xml:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          text/xml:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+          application/*+xml:
+            schema:
+              $ref: >-
+                #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote
+      responses:
+        '200':
+          description: Success
+  /Location/CreateLocation:
+    post:
+      tags:
+        - Location
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalLocationDto'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalLocationDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalLocationDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalLocationDto'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalLocationDto'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalLocationDto'
+          application/*+xml:
+            schema:
+              $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalLocationDto'
+      responses:
+        '200':
+          description: Success
+components:
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      description: >-
+        JWT Authorization header using the Bearer scheme. Example:
+        "Authorization: Bearer {token}"
+      name: Authorization
+      in: header
+  schemas:
+    ShiipPublic.API.DTO.TenantLogin:
+      required:
+        - email
+        - password
+        - wmsCode
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        wmsCode:
+          type: string
+      additionalProperties: false
+    ShiipPublic.API.DTO.Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+          nullable: true
+        token_type:
+          type: string
+          nullable: true
+        expires_in:
+          type: number
+          format: double
+        refresh_token:
+          type: string
+          nullable: true
+        userName:
+          type: string
+          nullable: true
+        .issued:
+          type: string
+          format: date-time
+        .expires:
+          type: string
+          format: date-time
+        tenants:
+          type: array
+          items:
+            type: string
+          nullable: true
+        sb:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Authorization.SharedKernel.Models.Additionalchargeslist:
+      type: object
+      properties:
+        additionalChargeExGst:
+          type: string
+          default: ''
+          nullable: true
+        additionalChargeForInvoiceDescription:
+          type: string
+          default: ''
+          nullable: true
+        additionalChargeIncGst:
+          type: string
+          default: ''
+          nullable: true
+      additionalProperties: false
+    Authorization.SharedKernel.Models.CostEstimate:
+      type: object
+      properties:
+        chargedWeight:
+          type: string
+          default: ''
+          nullable: true
+        distance:
+          type: string
+          default: ''
+          nullable: true
+        minimumHours:
+          type: string
+          default: ''
+          nullable: true
+        hourlyRateExFuel:
+          type: string
+          default: ''
+          nullable: true
+        cubingFactor:
+          type: string
+          default: ''
+          nullable: true
+        freightChargeExGst:
+          type: string
+          default: ''
+          nullable: true
+        fuelAmount:
+          type: string
+          default: ''
+          nullable: true
+        fuelPercentage:
+          type: string
+          default: ''
+          nullable: true
+        rateType:
+          type: string
+          default: ''
+          nullable: true
+        serviceCode:
+          type: string
+          default: ''
+          nullable: true
+        serviceDescription:
+          type: string
+          default: ''
+          nullable: true
+        totalChargeExGst:
+          type: string
+          default: ''
+          nullable: true
+        totalPayableIncGst:
+          type: string
+          default: ''
+          nullable: true
+        zoneFrom:
+          type: string
+          default: ''
+          nullable: true
+        zoneTo:
+          type: string
+          default: ''
+          nullable: true
+        additionalChargesList:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/Authorization.SharedKernel.Models.Additionalchargeslist
+          nullable: true
+      additionalProperties: false
+    Authorization.SharedKernel.Models.GlobalAddress:
+      required:
+        - address1
+        - companyName
+        - postCode
+        - state
+        - suburb
+      type: object
+      properties:
+        companyName:
+          type: string
+          default: ''
+        address1:
+          maxLength: 70
+          minLength: 3
+          type: string
+          default: ''
+        address2:
+          maxLength: 70
+          minLength: 0
+          type: string
+          nullable: true
+        suburb:
+          maxLength: 53
+          minLength: 2
+          type: string
+          default: ''
+        state:
+          maxLength: 10
+          minLength: 1
+          type: string
+          default: ''
+        postCode:
+          maxLength: 4
+          minLength: 4
+          type: string
+        contact:
+          type: string
+          default: ''
+          nullable: true
+        phone:
+          type: string
+          format: tel
+          default: ''
+          nullable: true
+        email:
+          type: string
+          default: ''
+          nullable: true
+        country:
+          type: string
+          default: ''
+          nullable: true
+      additionalProperties: false
+    Authorization.SharedKernel.Models.GlobalDG:
+      type: object
+      properties:
+        className:
+          type: number
+          format: double
+        packageType:
+          type: string
+          nullable: true
+        packingGroup:
+          type: string
+          nullable: true
+        noPkgs:
+          type: integer
+          format: int32
+        aggregateQty:
+          type: integer
+          format: int32
+        unn:
+          type: string
+          nullable: true
+        contactName:
+          type: string
+          nullable: true
+        contactPhone:
+          type: string
+          nullable: true
+        shippingName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Authorization.SharedKernel.Models.GlobalConnoteGood:
+      type: object
+      properties:
+        itemReference:
+          type: string
+          default: ''
+          nullable: true
+        qty:
+          maximum: 999
+          minimum: 0
+          type: integer
+          format: int32
+          default: 0
+        length:
+          maximum: 999
+          minimum: 0
+          type: number
+          format: double
+          default: 0
+        width:
+          maximum: 999
+          minimum: 0
+          type: number
+          format: double
+          default: 0
+        height:
+          maximum: 999
+          minimum: 0
+          type: number
+          format: double
+          default: 0
+        weight:
+          maximum: 99999
+          minimum: 0
+          type: number
+          format: double
+          default: 0
+        unitOfMeasureName:
+          maxLength: 20
+          minLength: 3
+          type: string
+          default: ''
+          nullable: true
+        dangerousGoods:
+          $ref: '#/components/schemas/Authorization.SharedKernel.Models.GlobalDG'
+        volume:
+          type: number
+          format: double
+      additionalProperties: false
+    Authorization.SharedKernel.Models.GlobalConnote+GlobalCEvents:
+      type: object
+      properties:
+        status:
+          type: string
+          nullable: true
+        dateTime:
+          type: string
+          format: date-time
+        details:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        orderId:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Authorization.SharedKernel.Models.GlobalConnote:
+      required:
+        - receiverAddress
+        - warehouseCode
+      type: object
+      properties:
+        id:
+          type: string
+          default: ''
+          nullable: true
+        consignmentNo:
+          type: string
+          default: ''
+          nullable: true
+        carrierName:
+          type: string
+          default: ''
+          nullable: true
+        serviceName:
+          type: string
+          default: ''
+          nullable: true
+        serviceCode:
+          type: string
+          default: ''
+          nullable: true
+        carrierCode:
+          type: string
+          default: ''
+          nullable: true
+        carrierType:
+          type: string
+          default: ''
+          nullable: true
+        estimatedPrice:
+          type: string
+          default: ''
+          nullable: true
+        estimatedPriceExGst:
+          type: string
+          default: ''
+          nullable: true
+        eta:
+          type: string
+          default: ''
+          nullable: true
+        minEta:
+          type: string
+          default: ''
+          nullable: true
+        cutOffDateTime:
+          type: string
+          default: ''
+          nullable: true
+        accountNo:
+          type: string
+          default: ''
+          nullable: true
+        readyDateTime:
+          type: string
+          format: date-time
+        tenantCode:
+          type: string
+          default: ''
+          nullable: true
+        transitTime:
+          type: number
+          format: float
+          default: 5
+        costEstimate:
+          $ref: '#/components/schemas/Authorization.SharedKernel.Models.CostEstimate'
+        customerCode:
+          type: string
+          default: ''
+          nullable: true
+        warehouseCode:
+          type: string
+          default: ''
+        senderAddress:
+          $ref: '#/components/schemas/Authorization.SharedKernel.Models.GlobalAddress'
+        reference:
+          type: string
+          default: ''
+          nullable: true
+        senderReferences:
+          type: array
+          items:
+            type: string
+          nullable: true
+        receiverReferences:
+          type: array
+          items:
+            type: string
+          nullable: true
+        receiverAddress:
+          $ref: '#/components/schemas/Authorization.SharedKernel.Models.GlobalAddress'
+        connoteGoods:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/Authorization.SharedKernel.Models.GlobalConnoteGood
+          nullable: true
+        additionalCharges:
+          type: array
+          items:
+            type: string
+          nullable: true
+        specialInstructions:
+          type: string
+          default: ''
+          nullable: true
+        isATL:
+          type: boolean
+          default: false
+        isResidential:
+          type: boolean
+          default: false
+        emailTracking:
+          type: array
+          items:
+            type: string
+          nullable: true
+        saveAsDraft:
+          type: boolean
+          default: false
+        createDrafts:
+          type: boolean
+          default: false
+        reassignedFrom:
+          type: string
+          default: ''
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        events:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/Authorization.SharedKernel.Models.GlobalConnote+GlobalCEvents
+          nullable: true
+        customerId:
+          type: integer
+          format: int32
+          default: 0
+        billingId:
+          type: string
+          default: ''
+          nullable: true
+        isReturn:
+          type: boolean
+          default: false
+        thirdParty:
+          type: string
+          default: ''
+          nullable: true
+        emailLabel:
+          type: string
+          default: ''
+          nullable: true
+        toSendLabel:
+          type: boolean
+          default: false
+        labelPrinter:
+          type: string
+          nullable: true
+        sendSMS:
+          type: boolean
+          default: false
+        logId:
+          type: string
+          nullable: true
+        bookNow:
+          type: boolean
+          default: false
+        autoManifest:
+          type: boolean
+          default: false
+        autoManifestDateTime:
+          type: string
+          format: date-time
+        idCheck:
+          type: string
+          nullable: true
+        signatureRequired:
+          type: boolean
+        poa:
+          type: boolean
+        reassignedTo:
+          type: string
+          default: ''
+          nullable: true
+        reassignedToCarrier:
+          type: string
+          default: ''
+          nullable: true
+        reassignedToService:
+          type: string
+          default: ''
+          nullable: true
+        reassignedFromCarrier:
+          type: string
+          default: ''
+          nullable: true
+        reassignedFromService:
+          type: string
+          default: ''
+          nullable: true
+        reassignedReason:
+          type: string
+          default: ''
+          nullable: true
+        originatingCarrierCode:
+          type: string
+          nullable: true
+        originatingServiceCode:
+          type: string
+          nullable: true
+        sortBy:
+          type: string
+          nullable: true
+        limitTo:
+          type: integer
+          format: int32
+        serviceGroup:
+          type: string
+          nullable: true
+        costCentre:
+          type: string
+          default: ''
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        orderNo:
+          type: string
+          default: ''
+          nullable: true
+        fulfillmentRequestId:
+          type: string
+          default: ''
+          nullable: true
+        storeId:
+          type: string
+          default: ''
+          nullable: true
+      additionalProperties: false
+    ShiipPublic.API.DTO.LocationAddressDto:
+      required:
+        - address1
+        - postCode
+        - state
+        - suburb
+      type: object
+      properties:
+        address1:
+          maxLength: 200
+          minLength: 2
+          type: string
+        address2:
+          type: string
+          nullable: true
+        postCode:
+          maxLength: 4
+          minLength: 4
+          type: string
+        state:
+          maxLength: 200
+          minLength: 2
+          type: string
+        suburb:
+          maxLength: 200
+          minLength: 2
+          type: string
+      additionalProperties: false
+    ShiipPublic.API.DTO.LocationContactDto:
+      required:
+        - contactName
+        - email
+        - phone
+      type: object
+      properties:
+        contactName:
+          maxLength: 200
+          minLength: 2
+          type: string
+        email:
+          maxLength: 200
+          minLength: 2
+          type: string
+        phone:
+          maxLength: 10
+          minLength: 10
+          type: string
+      additionalProperties: false
+    ShiipPublic.API.DTO.LocationSupportDto:
+      type: object
+      properties:
+        businessName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Shiip.SharedKernel.Enums.CarrierCodes:
+      enum:
+        - Default
+        - BEX
+        - STE
+        - TNT
+        - VCT
+        - BSL
+        - CSP
+        - TPY
+        - FWC
+        - IPEC
+        - TLN
+        - SRL
+        - JDT
+        - ASF
+        - VEL
+        - HIT
+        - GKR
+        - SAMP
+        - BTQ
+        - GTL
+        - DSE
+        - SCT
+        - NTL
+        - KNG
+        - KING
+        - KNGV
+        - KNGQ
+        - KNGS
+        - CAP
+        - AUS
+        - CTI
+        - FOLL
+        - CPE
+        - ALD
+        - TMS
+        - DXT
+        - SLM
+        - TSF
+        - TFM
+        - PTF
+        - HHE
+        - DCS
+        - KWA
+        - TNTINT
+        - ARA
+        - ZOO
+        - SHE
+        - TBA
+        - NEW
+        - HTX
+        - JET
+        - BHE
+        - DFE
+        - TSD
+        - CAB
+        - SCL
+        - DRI
+        - COCH
+      type: string
+    ShiipPublic.API.DTO.GlobalJourneyDto:
+      type: object
+      properties:
+        accountNo:
+          type: string
+          nullable: true
+        carrierCode:
+          $ref: '#/components/schemas/Shiip.SharedKernel.Enums.CarrierCodes'
+        serviceCode:
+          type: string
+          nullable: true
+        outbound:
+          type: boolean
+        setAsPreferredJourney:
+          type: boolean
+        enablePickupReminder:
+          type: boolean
+        pickupReminderHoursBefore:
+          type: integer
+          format: int32
+        snoozeDurationMinutes:
+          type: integer
+          format: int32
+        numberofSnooze:
+          type: integer
+          format: int32
+        pickupReminderUsers:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    ShiipPublic.API.DTO.LocationAdditionalDataDto:
+      type: object
+      properties:
+        key:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ShiipPublic.API.DTO.GlobalLocationDto:
+      required:
+        - businessName
+        - locationName
+        - senderCode
+      type: object
+      properties:
+        locationName:
+          maxLength: 200
+          minLength: 2
+          type: string
+        disabled:
+          type: boolean
+        senderCode:
+          maxLength: 200
+          minLength: 2
+          type: string
+        businessName:
+          maxLength: 200
+          minLength: 2
+          type: string
+        locationAddress:
+          $ref: '#/components/schemas/ShiipPublic.API.DTO.LocationAddressDto'
+        locationContact:
+          $ref: '#/components/schemas/ShiipPublic.API.DTO.LocationContactDto'
+        locationSupport:
+          $ref: '#/components/schemas/ShiipPublic.API.DTO.LocationSupportDto'
+        businessOpenTime:
+          type: string
+          nullable: true
+        businessCloseTime:
+          type: string
+          nullable: true
+        locationUsers:
+          type: array
+          items:
+            type: string
+          nullable: true
+        ianaTimeZone:
+          type: string
+          nullable: true
+        specialInstructions:
+          type: string
+          nullable: true
+        autoSelectBestCarrier:
+          type: boolean
+        autoSelectCriteria:
+          type: string
+          nullable: true
+        carrierServices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShiipPublic.API.DTO.GlobalJourneyDto'
+          nullable: true
+        additionalData:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShiipPublic.API.DTO.LocationAdditionalDataDto'
+          nullable: true
+      additionalProperties: false
+security:
+  - Bearer: []

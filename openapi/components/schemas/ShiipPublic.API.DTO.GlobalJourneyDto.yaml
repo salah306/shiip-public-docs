@@ -1,0 +1,31 @@
+type: object
+properties:
+  accountNo:
+    type: string
+    nullable: true
+  carrierCode:
+    $ref: .\Shiip.SharedKernel.Enums.CarrierCodes.yaml
+  serviceCode:
+    type: string
+    nullable: true
+  outbound:
+    type: boolean
+  setAsPreferredJourney:
+    type: boolean
+  enablePickupReminder:
+    type: boolean
+  pickupReminderHoursBefore:
+    type: integer
+    format: int32
+  snoozeDurationMinutes:
+    type: integer
+    format: int32
+  numberofSnooze:
+    type: integer
+    format: int32
+  pickupReminderUsers:
+    type: array
+    items:
+      type: string
+    nullable: true
+additionalProperties: false

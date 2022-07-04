@@ -1,0 +1,29 @@
+post:
+  tags:
+    - Location
+  requestBody:
+    content:
+      application/json-patch+json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.GlobalLocationDto.yaml
+      application/json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.GlobalLocationDto.yaml
+      text/json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.GlobalLocationDto.yaml
+      application/*+json:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.GlobalLocationDto.yaml
+      application/xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.GlobalLocationDto.yaml
+      text/xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.GlobalLocationDto.yaml
+      application/*+xml:
+        schema:
+          $ref: ..\components\schemas\ShiipPublic.API.DTO.GlobalLocationDto.yaml
+  responses:
+    '200':
+      description: Success
